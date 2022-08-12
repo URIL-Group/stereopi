@@ -53,7 +53,7 @@ while pair_counter != total_pairs:
 			obj_pts.append(objp)
 			#refine checkerboard corners
 			cv2.cornerSubPix(img_left_gray, cornersL, (11,11), (-1,-1), criteria)
-			cv2.cornerSubPix(img_right_gray, cornersR, (11,11), (-1,-1), criteria)
+			cv2.cornerSubPix(img_left_gray, cornersR, (11,11), (-1,-1), criteria)
 			cv2.drawChessboardCorners(outputL, CHECKERBOARD, cornersL, retL)
 			cv2.drawChessboardCorners(outputR, CHECKERBOARD, cornersR, retR)
 			#show checkerboard corner detection
@@ -70,16 +70,18 @@ print("...Finished pair cycle...")
 print("...Begin calibration of individual cameras...")
 
 #imgSize parameter!
-imgSize = img_left_gray.shape[::-1]
+imgSize = img_left_gray.shape[1::-1]
 
 retL, int_mtrx_L, distL, rot_vec_L, trns_vec_L = cv2.calibrateCamera(obj_pts, img_pts_L, imgSize, None, None)
 htL, wdL = img_left_gray.shape[:2]
 new_int_mtrx_L, roiL = cv2.getOptimalNewCameraMatrix(int_mtrx_L, distL, (wdL, htL), 1, (wdL, htL))
+print("Per pixel reprojection error left camera:", retL)
 
 ## Calibrate right camera
 retR, int_mtrx_R, distR, rot_vec_R, trns_vec_R = cv2.calibrateCamera(obj_pts, img_pts_R, imgSize, None, None)
 htR, wdR = img_right_gray.shape[:2]
 new_int_mtrx_R, roiR = cv2.getOptimalNewCameraMatrix(int_mtrx_R, distR, (wdR, htR), 1, (wdR, htR))
+print("Per pixel reprojection error right camera:", retR)
 
 ## Calibrate stereo pair --> FIX INTRINSIC MATRICES
 print("...Begin calibration of stereo pair...")
@@ -92,6 +94,7 @@ criteria_stereo = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001
 #calculate essential and fundamental matrices between two cameras
 retS, new_int_mtrx_L, distL, new_int_mtrx_R, distR, rot, trans, EMat, FMat = cv2.stereoCalibrate(obj_pts, img_pts_L, img_pts_R, new_int_mtrx_L, distL, new_int_mtrx_R, distR, 
 imgSize, criteria_stereo, flags)
+print("Stereo per pixel reprojection error:", retS)
 
 ## Stereo Rectification --> map from L/R images
 rectify_scale = 1
@@ -109,10 +112,3 @@ rightMapY = right_stereo_map[1], rightROI = roi_R)
 print("...Parameters saved!...")
 
 
-## Save parameters using cv2
-#cv_file = cv2.FileStorage("calibration_parameters.xml", cv2.FILE_STORAGE_WRITE)
-#cv_file.write("left_stereo_map_x", left_stereo_map[0])
-#cv_file.write("left_stereo_map_y", left_stereo_map[1])
-#cv_file.write("right_stereo_map_x", right_stereo_map[0])
-#cv_file.write("right_stereo_map_y", right_stereo_map[1])
-#cv_file.release()

@@ -15,12 +15,12 @@ NOD = 32 #number of disparities; must be divisable by 16
 TTH = 10  #texture threshold
 UR = 7   #uniqueness ratio; rec:5-15
 SR = 3   #speckle range; VALUES MULTIPLIED BY 16
-SPWS = 100 #speckle window size; rec:50-200
+SPWS = 150 #speckle window size; rec:50-200
 
 ## Load L/R Images & convert to numpy arrays
 print("...loading image pair...")
-image_left = cv2.imread("./example_pics/bottle_left.jpg")
-image_right = cv2.imread("./example_pics/bottle_right.jpg")
+image_left = cv2.imread("./example_pics/box_picture1_left.jpg")
+image_right = cv2.imread("./example_pics/box_picture1_right.jpg")
 
 ## Load calibration parameters
 print("...loading calibration parameters...")
@@ -36,9 +36,9 @@ rightROI = tuple(calibration["rightROI"])
 ## Rectify images using calibration parameters and show images
 fixed_left = cv2.remap(image_left, leftMapX, leftMapY, cv2.INTER_LINEAR)
 fixed_right = cv2.remap(image_right, rightMapX, rightMapY, cv2.INTER_LINEAR)
-#print("...showing rectified images...")
-#cv2.imshow("left image", fixed_left)
-#cv2.imshow("right image", fixed_right)
+print("...showing rectified images...")
+cv2.imshow("left image", fixed_left)
+cv2.imshow("right image", fixed_right)
 #cv2.waitKey(0)
 gray_img_L = cv2.cvtColor(fixed_left, cv2.COLOR_BGR2GRAY)
 gray_img_R = cv2.cvtColor(fixed_right, cv2.COLOR_BGR2GRAY)

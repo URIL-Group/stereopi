@@ -10,7 +10,7 @@ from stereovision.calibration import StereoCalibration
 from stereovision.exceptions import ChessboardNotFoundError
 
 ## Directories ##
-pairs_dir = "./pairs_Berm2" 
+pairs_dir = "./pairs_land_calib"
 
 ## Global Variables Preset ##
 # chessboard parameters
@@ -24,16 +24,16 @@ for filename in os.listdir(pairs_dir):
 	total_photos += 1
 
 total_pairs = total_photos/2
-print("Total photo pairs:", total_pairs)
+print("...Total photo pairs: ", total_pairs, "...")
 
 
 ## Calibration ##
 pair_counter = 0
-print("Start reading image pairs")
+print("...Start reading image pairs...")
 
 while pair_counter != total_pairs:
 	pair_counter += 1
-	print("Import pair number:", pair_counter)
+	print("...Import pair number:", pair_counter, "...")
 	left_name = pairs_dir+'/left_'+str(pair_counter)+'.png'
 	right_name = pairs_dir+'/right_'+str(pair_counter)+'.png'
 	if os.path.isfile(left_name) and os.path.isfile(right_name):
@@ -47,20 +47,20 @@ while pair_counter != total_pairs:
 			calibrator._get_corners(img_right)
 		except ChessboardNotFoundError as error:
 			print(error)
-			print("Pair number", pair_counter, "ignored")
+			print("...Pair number ", pair_counter, " ignored...")
 		else:
 			calibrator.add_corners((img_left, img_right), True)
 
-print("Finished reading image pairs")
+print("...Finished reading image pairs...")
 
-print("Starting calibration... please wait")
+print("...Starting calibration, please wait...")
 calibration = calibrator.calibrate_cameras()
-calibration.export("calibration_result_Berm2")
+calibration.export("calibration_result_land")
 
 ## Show rectified pair and average error ##
-calibration = StereoCalibration(input_folder = "calibration_result_Berm2")
+calibration = StereoCalibration(input_folder = "calibration_result_land")
 avg_error = calibrator.check_calibration(calibration)
-print("Average error of calibration object:", avg_error)
+print("...Average error of calibration object:", avg_error, "...")
 
 rectified_pair = calibration.rectify((img_left, img_right))
 cv2.imshow('Left CALIBRATED', rectified_pair[0])
@@ -68,3 +68,4 @@ cv2.imshow('Right CALIBRATED', rectified_pair[1])
 cv2.imwrite("rectifyed_left.jpg",rectified_pair[0])
 cv2.imwrite("rectifyed_right.jpg",rectified_pair[1])
 cv2.waitKey(0)
+
