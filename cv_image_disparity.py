@@ -9,22 +9,23 @@ import os
 ## Global Variables
 PFS = 5 #pre filter size
 PFC = 63  #pre filter cap
-BS = 11 #block size; rec:3-11, odd
+BS = 9 #block size; rec:3-11, odd
 MDS = -3 #min disparity
 NOD = 32 #number of disparities; must be divisable by 16
 TTH = 10  #texture threshold
-UR = 7   #uniqueness ratio; rec:5-15
-SR = 3   #speckle range; VALUES MULTIPLIED BY 16
-SPWS = 150 #speckle window size; rec:50-200
+UR = 5   #uniqueness ratio; rec:5-15
+SR = 15   #speckle range; VALUES MULTIPLIED BY 16
+SPWS = 50 #speckle window size; rec:50-200
 
 ## Load L/R Images & convert to numpy arrays
 print("...loading image pair...")
-image_left = cv2.imread("./example_pics/box_picture1_left.jpg")
-image_right = cv2.imread("./example_pics/box_picture1_right.jpg")
+image_left = cv2.imread("./example_pics/box_picture2_left.jpg")
+image_right = cv2.imread("./example_pics/box_picture2_right.jpg")
+#cv2.imshow("left img raw",image_left)
 
 ## Load calibration parameters
 print("...loading calibration parameters...")
-calibration = np.load("calibration_parameters.npz", allow_pickle=False)
+calibration = np.load("calibration_parameters_v1.npz", allow_pickle=False)
 imageSize = tuple(calibration["imageSize"])
 leftMapX = calibration["leftMapX"]
 leftMapY = calibration["leftMapY"]
@@ -34,8 +35,8 @@ rightMapY = calibration["rightMapY"]
 rightROI = tuple(calibration["rightROI"])
 
 ## Rectify images using calibration parameters and show images
-fixed_left = cv2.remap(image_left, leftMapX, leftMapY, cv2.INTER_LINEAR)
-fixed_right = cv2.remap(image_right, rightMapX, rightMapY, cv2.INTER_LINEAR)
+fixed_left = cv2.remap(image_left, leftMapX, leftMapY, cv2.INTER_LANCZOS4, cv2.BORDER_CONSTANT,0)
+fixed_right = cv2.remap(image_right, rightMapX, rightMapY, cv2.INTER_LANCZOS4, cv2.BORDER_CONSTANT,0)
 print("...showing rectified images...")
 cv2.imshow("left image", fixed_left)
 cv2.imshow("right image", fixed_right)

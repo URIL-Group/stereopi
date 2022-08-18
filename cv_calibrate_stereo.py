@@ -7,15 +7,17 @@ import os
 import numpy as np
 
 ## Directory for Images
-pairs_dir = "./pairs_land_calib"
+pairs_dir = "./pairs_land_calib_v1"
 
 ## Define Checkerboard Parameters
 CHECKERBOARD = (6,9)
+world_scale = 1.094 #size of checkerboard square in inches
 criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 
 ## Define world coordinates
 objp = np.zeros((CHECKERBOARD[0] * CHECKERBOARD[1], 3), np.float32)
 objp[:,:2] = np.mgrid[0:CHECKERBOARD[0],0:CHECKERBOARD[1]].T.reshape(-1,2)
+objp = objp * world_scale
 
 ## Define vectors for image points
 img_pts_L = []
@@ -46,14 +48,14 @@ while pair_counter != total_pairs:
 		img_right_gray = cv2.imread(right_name, 0)
 		outputL = img_left.copy()
 		outputR = img_right.copy()
-		retL, cornersL = cv2.findChessboardCorners(outputL, CHECKERBOARD, None)
-		retR, cornersR = cv2.findChessboardCorners(outputR, CHECKERBOARD, None)
+		retL, cornersL = cv2.findChessboardCorners(img_left_gray, CHECKERBOARD, None)
+		retR, cornersR = cv2.findChessboardCorners(img_right_gray, CHECKERBOARD, None)
 
 		if retL and retR:
 			obj_pts.append(objp)
 			#refine checkerboard corners
 			cv2.cornerSubPix(img_left_gray, cornersL, (11,11), (-1,-1), criteria)
-			cv2.cornerSubPix(img_left_gray, cornersR, (11,11), (-1,-1), criteria)
+			cv2.cornerSubPix(img_right_gray, cornersR, (11,11), (-1,-1), criteria)
 			cv2.drawChessboardCorners(outputL, CHECKERBOARD, cornersL, retL)
 			cv2.drawChessboardCorners(outputR, CHECKERBOARD, cornersR, retR)
 			#show checkerboard corner detection
@@ -107,7 +109,7 @@ right_stereo_map = cv2.initUndistortRectifyMap(new_int_mtrx_R, distR, rect_R, pr
 
 ## Save parameters using numpy
 print("...Saving parameters...")
-np.savez_compressed("calibration_parameters.npz", imageSize = imgSize, leftMapX = left_stereo_map[0], leftMapY = left_stereo_map[1], leftROI = roi_L, rightMapX = right_stereo_map[0], 
+np.savez_compressed("calibration_parameters_v1.npz", imageSize = imgSize, leftMapX = left_stereo_map[0], leftMapY = left_stereo_map[1], leftROI = roi_L, rightMapX = right_stereo_map[0], 
 rightMapY = right_stereo_map[1], rightROI = roi_R)
 print("...Parameters saved!...")
 
