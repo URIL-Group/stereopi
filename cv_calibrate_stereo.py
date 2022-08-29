@@ -65,15 +65,17 @@ while pair_counter != total_pairs:
 			#append points to vectors
 			img_pts_L.append(cornersL)
 			img_pts_R.append(cornersR)
+		else:
+			print("...Chessboard not found in:", left_name, "and ", right_name, "...")
 print("...Finished pair cycle...")
 
-## Calibrate left camera --> get intrinsic cam matrix, distortion coeff, rotation vector (3x1),
-## translation vector (3x1)
 print("...Begin calibration of individual cameras...")
 
 #imgSize parameter!
 imgSize = img_left_gray.shape[1::-1]
+print("Image size is: ", imgSize)
 
+## Calibrate left camera
 retL, int_mtrx_L, distL, rot_vec_L, trns_vec_L = cv2.calibrateCamera(obj_pts, img_pts_L, imgSize, None, None)
 htL, wdL = img_left_gray.shape[:2]
 new_int_mtrx_L, roiL = cv2.getOptimalNewCameraMatrix(int_mtrx_L, distL, (wdL, htL), 1, (wdL, htL))
@@ -110,7 +112,7 @@ right_stereo_map = cv2.initUndistortRectifyMap(new_int_mtrx_R, distR, rect_R, pr
 ## Save parameters using numpy
 print("...Saving parameters...")
 np.savez_compressed("calibration_parameters_v1.npz", imageSize = imgSize, leftMapX = left_stereo_map[0], leftMapY = left_stereo_map[1], leftROI = roi_L, rightMapX = right_stereo_map[0], 
-rightMapY = right_stereo_map[1], rightROI = roi_R)
+rightMapY = right_stereo_map[1], rightROI = roi_R, Q = Q)
 print("...Parameters saved!...")
 
 
