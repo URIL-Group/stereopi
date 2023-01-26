@@ -24,8 +24,8 @@ photo_counter = 0
 ## Main pair cut cycle
 print("...Begin photo cycle...")
 
-if (os.path.isdir("./pairs_land_calib_v2")==False):
-	os.makedirs("./pairs_land_calib_v2")
+if (os.path.isdir("./pairs_tank_calib")==False):
+	os.makedirs("./pairs_tank_calib")
 while photo_counter != total_photos:
 	for filename in os.listdir(dir):
 		photo_counter += 1
@@ -38,8 +38,8 @@ while photo_counter != total_photos:
 		cv2.waitKey(0)
 		img_right = img_pair[0:img_height, 0:img_width]
 		img_left = img_pair[0:img_height, img_width:photo_width]
-		right_name = "./pairs_land_calib_v2/right_"+str(photo_counter).zfill(2)+".png"
-		left_name = "./pairs_land_calib_v2/left_"+str(photo_counter).zfill(2)+".png"
+		right_name = "./pairs_tank_calib/right_"+str(photo_counter).zfill(2)+".png"
+		left_name = "./pairs_tank_calib/left_"+str(photo_counter).zfill(2)+".png"
 		cv2.imwrite(right_name, img_right)
 		cv2.imwrite(left_name, img_left)
 		print("...Pair number ", str(photo_counter), "saved...")

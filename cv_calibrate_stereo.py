@@ -7,11 +7,11 @@ import os
 import numpy as np
 
 ## Directory for Images
-pairs_dir = "./pairs_land_calib_v1"
+pairs_dir = "./pairs_tank_calib"
 
 ## Define Checkerboard Parameters
-CHECKERBOARD = (6,9)
-world_scale = 1.094 #size of checkerboard square in inches
+CHECKERBOARD = (6,8)
+world_scale = 1 #size of checkerboard square in inches
 criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 
 ## Define world coordinates
@@ -111,7 +111,7 @@ right_stereo_map = cv2.initUndistortRectifyMap(new_int_mtrx_R, distR, rect_R, pr
 
 ## Save parameters using numpy
 print("...Saving parameters...")
-np.savez_compressed("calibration_parameters_v1.npz", imageSize = imgSize, leftMapX = left_stereo_map[0], leftMapY = left_stereo_map[1], leftROI = roi_L, rightMapX = right_stereo_map[0], 
+np.savez_compressed("calibration_parameters_tank.npz", imageSize = imgSize, leftMapX = left_stereo_map[0], leftMapY = left_stereo_map[1], leftROI = roi_L, rightMapX = right_stereo_map[0], 
 rightMapY = right_stereo_map[1], rightROI = roi_R, Q = Q)
 print("...Parameters saved!...")
 
