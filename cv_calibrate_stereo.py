@@ -113,6 +113,21 @@ right_stereo_map = cv2.initUndistortRectifyMap(new_int_mtrx_R, distR, rect_R, pr
 print("...Saving parameters...")
 np.savez_compressed("calibration_parameters_tank.npz", imageSize = imgSize, leftMapX = left_stereo_map[0], leftMapY = left_stereo_map[1], leftROI = roi_L, rightMapX = right_stereo_map[0], 
 rightMapY = right_stereo_map[1], rightROI = roi_R, Q = Q)
+
+cv_file = cv2.FileStorage("tank_calibration.xml", cv2.FILE_STORAGE_WRITE)
+cv_file.write("Image_Size", imgSize)
+#cv_file.write("Left_Map_X", left_stereo_map[0])
+#cv_file.write("Left_Map_Y", left_stereo_map[1])
+#cv_file.write("Left_ROI", roi_L)
+#cv_file.write("Right_Map_X", right_stereo_map[0])
+#cv_file.write("Right_Map_Y", right_stereo_map[1])
+#cv_file.write("Right_ROI", roi_R)
+cv_file.write("Q_matrix", Q)
+cv_file.write("Rotation_matrix", rot)
+cv_file.write("Translation_matrix", trans)
+cv_file.write("Essential_matrix", EMat)
+cv_file.write("Fundamental_matrix", FMat)
+cv_file.release()
 print("...Parameters saved!...")
 
 

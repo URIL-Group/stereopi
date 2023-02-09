@@ -37,7 +37,7 @@ rightROI = tuple(calibration["rightROI"])
 ## Rectify images using calibration parameters and show images
 fixed_left = cv2.remap(image_left, leftMapX, leftMapY, cv2.INTER_LINEAR, cv2.BORDER_CONSTANT)
 fixed_right = cv2.remap(image_right, rightMapX, rightMapY, cv2.INTER_LINEAR, cv2.BORDER_CONSTANT)
-print("...showing rectified images...")
+#print("...showing rectified images...")
 #cv2.imshow("left image", fixed_left)
 #cv2.imshow("right image", fixed_right)
 #cv2.waitKey(0)
@@ -53,9 +53,9 @@ cv2.waitKey(0)
 
 gray_img_L = cv2.cvtColor(fixed_left, cv2.COLOR_BGR2GRAY)
 gray_img_R = cv2.cvtColor(fixed_right, cv2.COLOR_BGR2GRAY)
-print("...showing gray rectified images...")
-cv2.imshow("gray L image", gray_img_L)
-cv2.imshow("gray R image", gray_img_L)
+#print("...showing gray rectified images...")
+#cv2.imshow("gray L image", gray_img_L)
+#cv2.imshow("gray R image", gray_img_L)
 
 ## Create block matcher, set tuning variables, visualize disparity
 print("...creating block matcher...")
